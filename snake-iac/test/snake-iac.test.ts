@@ -5,7 +5,7 @@ import * as SnakeIac from '../lib/snake-iac-stack';
 test('Empty Stack', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new SnakeIac.SnakeIacStack(app, 'MyTestStack');
+    const stack = new SnakeIac.SnakeStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(matchTemplate({
       "Resources": {}
