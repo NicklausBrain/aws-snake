@@ -1,0 +1,20 @@
+﻿1) Implement top level game menu
+2) Create additional levels
+3) Implement possibility to set game speed
+4) Create additional controls (buttons) and ability to choose preferred controls in settings
+5) Implement controls settings
+6) Implement bonus/extra food
+7) [Implement smart food]
+8) Integrate game to Apache Cordova
+10) Implement score table
+11) Implement several color themes
+12) Choose nice fonts
+13) Get rid of redundant glyph icons from font awesome or replace font awesome with something more lightweight
+14) Remove debug code in the end
+15) Introduce code minimization
+16) Configure builds for each platform if possible
+17) Snake animation on the menu background
+18) Localization
+19) Sounds
+20) Animation for food
+21) Perhaps it would be nice if snake will be thinner at the tail (or more transparent)
