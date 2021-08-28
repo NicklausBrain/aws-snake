@@ -1,0 +1,177 @@
+/*
+	main colors:
+	1) background: whitesmoke;
+	2) menu default: darkcyan;
+	3) food default: mediumvioletred;
+	4) text color: whitesmoke;
+*/
+
+/* BEGIN GENERAL STYLES*/
+
+html {
+	font-size: 3vh;
+	height: 100%;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	overflow: hidden; /* Removes scroll bars in IE */
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: black;
+	touch-action: none;
+}
+
+#screen, .screen {
+	position: relative;
+	top: 50%;
+	left: 0;
+	width: 18rem;
+	height: 32rem;
+	padding: 0;
+	margin: 0 auto;
+	transform: translateY(-50%);
+	background-color: whitesmoke;
+	z-index: 0;
+}
+
+/* END GENERAL STYLES*/
+
+/* BEGIN CONTROLS STYLES*/
+
+/*
+	TODO: this is a try to emulate CSS class inheritance.
+	TODO: perhaps it is better to implicitly use several classes.
+*/
+.control, .menuButton, .scoreItem, #gameSpeedLabel {
+	position: absolute;
+	height: 2rem;
+	text-align: center;
+	margin: 0 auto;
+	cursor: pointer;
+}
+
+.control div {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#gameSpeedLabel {
+	width: 2rem;
+	border-style: none;
+	height: 2rem;
+	font-size: 2rem;
+}
+
+.menuButton {
+	left: 3rem;
+	width: 12rem;
+	height: 2rem;
+	background-color: darkcyan;
+	color: whitesmoke;
+	border-radius: 1rem;
+}
+
+	.menuButton:hover {
+		background-color: darkcyan;
+		opacity: 0.75;
+	}
+
+	.menuButton div {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.menuButton .fa {
+		display: inherit;
+	}
+
+.scoreItem {
+	left: 0rem;
+	width: 18rem;
+	color: black;
+}
+
+	.scoreItem div {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+#scoreLabel {
+	position: absolute;
+	width: 100%;
+	padding: 0.5rem;
+	text-align: center;
+	z-index: 900;
+}
+
+.gameButton {
+	position: absolute;
+	padding: 0.5rem;
+	cursor: pointer;
+	z-index: 1000;
+}
+
+#restartButton {
+	right: 0;
+}
+
+#pauseButton {
+	left: 0;
+	bottom: 0;
+}
+
+#resumeButton {
+	left: 0;
+	bottom: 0;
+}
+
+/* ENDCONTROLS STYLES*/
+
+/* BEGIN SNAKE STYLES */
+
+.snakeHead {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	background-color: darkcyan;
+	opacity: 0.75;
+	z-index: 500;
+}
+
+/*IMPORTANT NOTE !!! You may not set absolute with/height or top/left but just make blur radius and/or opacity! */
+.snakeUnit {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	background-color: darkcyan;
+	opacity: 0.5;
+	z-index: 500;
+}
+
+.food {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0.6rem;
+	height: 0.6rem;
+	border-style: solid;
+	border-width: 0.2rem;
+	border-color: whitesmoke;
+	border-radius: 50%;
+	background-color: mediumvioletred;
+	opacity: 0.75;
+	z-index: 100;
+}
+
+/* END SNAKE STYLES*/
