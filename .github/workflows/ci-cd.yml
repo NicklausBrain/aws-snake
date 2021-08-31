@@ -1,0 +1,116 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI-CD
+env:
+  node-version: 14.x
+  aws-region: eu-central-1
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# This workflow contains 3 phases: build, deploy-test, deploy-prod
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: install aws cdk
+        run: npm install -g aws-cdk
+
+      - name: install node modules
+        run: npm install
+        working-directory: ./snake-iac
+
+      - name: get existing stacks
+        run: cdk list
+        working-directory: ./snake-iac
+
+      - name: generate CloudFormation template
+        run: cdk synthesize
+        working-directory: ./snake-iac
+
+  deploy-test:
+    needs: [build] # when build succeeded
+    environment: test
+    env:
+      NODE_ENV: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.aws-region }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: install aws cdk
+        run: npm install -g aws-cdk
+
+      - name: install node modules
+        run: npm install
+        working-directory: ./snake-iac
+
+      - name: compare incoming and target CloudFormation stacks
+        run: cdk diff
+        working-directory: ./snake-iac
+
+      - name: deploy updated CloudFormation stack
+        run: cdk deploy --ci --require-approval never
+        working-directory: ./snake-iac
+
+  deploy-prod:
+    if: ${{ github.ref == 'refs/heads/main' }} # main branch only
+    needs: [deploy-test] # after test deploy succeeded
+    environment: prod
+    env:
+      NODE_ENV: prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.aws-region }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: install aws cdk
+        run: npm install -g aws-cdk
+
+      - name: install node modules
+        run: npm install
+        working-directory: ./snake-iac
+
+      - name: compare incoming and target CloudFormation stacks
+        run: cdk diff
+        working-directory: ./snake-iac
+
+      - name: deploy updated CloudFormation stack
+        run: cdk deploy --ci --require-approval never
+        working-directory: ./snake-iac
