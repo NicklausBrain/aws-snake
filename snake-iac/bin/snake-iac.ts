@@ -4,7 +4,7 @@ import * as cdk from '@aws-cdk/core';
 import { SnakeStack } from '../lib/snake-iac-stack';
 
 const app = new cdk.App();
-new SnakeStack(app, 'SnakeStack', {
+new SnakeStack(app, SnakeStack.Name, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
