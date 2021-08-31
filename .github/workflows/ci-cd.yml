@@ -76,7 +76,7 @@ jobs:
         working-directory: ./snake-iac
 
       - name: deploy updated CloudFormation stack
-        run: cdk deploy --ci
+        run: cdk deploy --ci --require-approval never
         working-directory: ./snake-iac
 
   deploy-prod:
@@ -112,5 +112,5 @@ jobs:
         working-directory: ./snake-iac
 
       - name: deploy updated CloudFormation stack
-        run: cdk deploy --ci
+        run: cdk deploy --ci --require-approval never
         working-directory: ./snake-iac
