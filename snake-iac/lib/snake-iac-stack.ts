@@ -1,8 +1,10 @@
 import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 
+import { env } from 'process';
+
 const snake = 'snake';
-const envName = 'test';
+const envName = env.NODE_ENV || 'local';
 const nameIt = (name: string) => `${envName}-${snake}-${name}`.toLowerCase();
 
 export class SnakeStack extends cdk.Stack {

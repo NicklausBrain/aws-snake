@@ -47,6 +47,8 @@ jobs:
   deploy-test:
     needs: [build] # when build succeeded
     environment: test
+    env:
+      NODE_ENV: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -81,6 +83,8 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }} # main branch only
     needs: [deploy-test] # after test deploy succeeded
     environment: prod
+    env:
+      NODE_ENV: prod
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
