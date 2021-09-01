@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
+import * as rg from '@aws-cdk/aws-resourcegroups';
 
 import { env } from 'process';
 
@@ -32,5 +33,11 @@ export class SnakeStack extends cdk.Stack {
     for (const nodeChild of scope.node.children) {
       cdk.Tags.of(nodeChild).add(SnakeStack.Name, SnakeStack.Name);
     }
+
+    // Resource group
+    new rg.CfnGroup(this, nameIt("resource-group"), {
+      name: nameIt("resource-group"),
+      tags: [{key: SnakeStack.Name, value: SnakeStack.Name}],
+    });
   }
 }

@@ -21,6 +21,7 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
+    "@aws-cdk/aws-resourcegroups": "^1.120.0",
     "@aws-cdk/aws-s3": "^1.120.0",
     "@aws-cdk/aws-s3-deployment": "^1.120.0",
     "@aws-cdk/core": "1.120.0",
