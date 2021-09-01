@@ -5,7 +5,7 @@ import * as rg from '@aws-cdk/aws-resourcegroups';
 
 import { env } from 'process';
 
-const envName = env.NODE_ENV || 'local';
+const envName = env.NODE_ENV || 'temp';
 const nameIt = (name: string) => `${envName}-snake-${name}`.toLowerCase();
 
 export class SnakeStack extends cdk.Stack {
