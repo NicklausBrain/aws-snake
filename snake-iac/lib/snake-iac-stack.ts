@@ -2,7 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as rg from '@aws-cdk/aws-resourcegroups';
-
+import * as gate from '@aws-cdk/aws-apigatewayv2';
+import * as integration from '@aws-cdk/aws-apigatewayv2-integrations'
 import { env } from 'process';
 
 const envName = env.NODE_ENV || 'temp';
@@ -29,6 +30,19 @@ export class SnakeStack extends cdk.Stack {
       destinationBucket: snakeClientBucket,
     });
 
+    // API Gateway
+    const snakeClientIntegration = new integration.HttpProxyIntegration(
+      {
+        method: gate.HttpMethod.GET,
+        url: snakeClientBucket.bucketWebsiteUrl,
+      });
+
+    const httpApi = new gate.HttpApi(this, nameIt("Api-GateWay"),
+      {
+        apiName: nameIt("Api-GateWay"),
+        defaultIntegration: snakeClientIntegration,
+      });
+
     // Tags
     for (const nodeChild of scope.node.children) {
       cdk.Tags.of(nodeChild).add(SnakeStack.Name, SnakeStack.Name);
@@ -37,7 +51,7 @@ export class SnakeStack extends cdk.Stack {
     // Resource group
     new rg.CfnGroup(this, nameIt("resource-group"), {
       name: nameIt("resource-group"),
-      tags: [{key: SnakeStack.Name, value: SnakeStack.Name}],
+      tags: [{ key: SnakeStack.Name, value: SnakeStack.Name }],
     });
   }
 }
