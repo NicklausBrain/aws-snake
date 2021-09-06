@@ -30,6 +30,23 @@ export class SnakeStack extends cdk.Stack {
       destinationBucket: snakeClientBucket,
     });
 
+    // Snake API
+    // @aws-cdk/aws-lambda
+    // var apiLambda = new Function(this, NameIt("API-Lambda"), new FunctionProps
+    // {
+    //     FunctionName = NameIt("API-Lambda"),
+    //     Runtime = Runtime.DOTNET_CORE_3_1, // execution environment
+    //     Code = Code.FromAsset(@"../api/bin/Release/netcoreapp3.1/api.zip"), // Code loaded from the "lambda" directory
+    //     Handler = "nick-api::nick.LambdaEntryPoint::FunctionHandlerAsync", // lambda handler id
+    //     MemorySize = 512,
+    //     Vpc = docDbVpc,
+    //     SecurityGroups = new ISecurityGroup[]
+    //     {
+    //         docDbSecGroup
+    //     },
+    //     Timeout = Duration.Seconds(15),
+    // });
+
     // API Gateway
     const snakeClientIntegration = new integration.HttpProxyIntegration(
       {
