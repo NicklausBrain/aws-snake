@@ -13,7 +13,7 @@ router.get('/', swaggerUi.setup(swaggerJsdoc({
             version: '1.0.0',
         },
     },
-    apis: ['./dist/*.js'], // files containing annotations as above
+    apis: ['./dist/**/*.js'], // files containing annotations as above
 })));
 
 export default router;
