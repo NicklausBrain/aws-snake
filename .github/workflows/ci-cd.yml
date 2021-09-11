@@ -29,10 +29,18 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
+      - name: install api node modules
+        run: npm install
+        working-directory: ./snake-api
+
+      - name: build api
+        run: npm run build
+        working-directory: ./snake-api
+
       - name: install aws cdk
         run: npm install -g aws-cdk
 
-      - name: install node modules
+      - name: install iac node modules
         run: npm install
         working-directory: ./snake-iac
 
@@ -64,10 +72,18 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
+      - name: install api node modules
+        run: npm install
+        working-directory: ./snake-api
+
+      - name: build api
+        run: npm run build
+        working-directory: ./snake-api
+
       - name: install aws cdk
         run: npm install -g aws-cdk
 
-      - name: install node modules
+      - name: install iac node modules
         run: npm install
         working-directory: ./snake-iac
 
@@ -100,10 +116,18 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
+      - name: install api node modules
+        run: npm install
+        working-directory: ./snake-api
+
+      - name: build api
+        run: npm run build
+        working-directory: ./snake-api
+
       - name: install aws cdk
         run: npm install -g aws-cdk
 
-      - name: install node modules
+      - name: install iac node modules
         run: npm install
         working-directory: ./snake-iac
 
