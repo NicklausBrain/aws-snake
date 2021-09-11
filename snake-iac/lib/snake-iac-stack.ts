@@ -3,6 +3,7 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as rg from '@aws-cdk/aws-resourcegroups';
 import * as gate from '@aws-cdk/aws-apigatewayv2';
+import * as lambda from '@aws-cdk/aws-lambda';
 import * as integration from '@aws-cdk/aws-apigatewayv2-integrations'
 import { env } from 'process';
 
@@ -31,21 +32,14 @@ export class SnakeStack extends cdk.Stack {
     });
 
     // Snake API
-    // @aws-cdk/aws-lambda
-    // var apiLambda = new Function(this, NameIt("API-Lambda"), new FunctionProps
-    // {
-    //     FunctionName = NameIt("API-Lambda"),
-    //     Runtime = Runtime.DOTNET_CORE_3_1, // execution environment
-    //     Code = Code.FromAsset(@"../api/bin/Release/netcoreapp3.1/api.zip"), // Code loaded from the "lambda" directory
-    //     Handler = "nick-api::nick.LambdaEntryPoint::FunctionHandlerAsync", // lambda handler id
-    //     MemorySize = 512,
-    //     Vpc = docDbVpc,
-    //     SecurityGroups = new ISecurityGroup[]
-    //     {
-    //         docDbSecGroup
-    //     },
-    //     Timeout = Duration.Seconds(15),
-    // });
+    const apiLambda = new lambda.Function(this, nameIt("api-lambda"), {
+      functionName: nameIt("api-lambda"),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset("./../snake-api/dist"),
+      handler: "main.handler",
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(3),
+    });
 
     // API Gateway
     const snakeClientIntegration = new integration.HttpProxyIntegration(
@@ -57,7 +51,7 @@ export class SnakeStack extends cdk.Stack {
     const httpApi = new gate.HttpApi(this, nameIt("Api-GateWay"),
       {
         apiName: nameIt("Api-GateWay"),
-        defaultIntegration: snakeClientIntegration,
+        defaultIntegration: snakeClientIntegration, // default route leads to website
       });
 
     // Tags

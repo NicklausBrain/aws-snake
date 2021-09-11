@@ -13,6 +13,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@vendia/serverless-express": "^4.3.11",
     "express": "^4.17.1",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
