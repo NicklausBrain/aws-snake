@@ -29,28 +29,8 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      - name: install api node modules
-        run: npm install
-        working-directory: ./snake-api
-
-      - name: build api
-        run: npm run build
-        working-directory: ./snake-api
-
-      - name: install aws cdk
-        run: npm install -g aws-cdk
-
-      - name: install iac node modules
-        run: npm install
-        working-directory: ./snake-iac
-
-      - name: get existing stacks
-        run: cdk list
-        working-directory: ./snake-iac
-
-      - name: generate CloudFormation template
-        run: cdk synthesize
-        working-directory: ./snake-iac
+      - name: build
+        run: sh ./build.sh
 
   deploy-test:
     needs: [build] # when build succeeded
@@ -72,20 +52,8 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      - name: install api node modules
-        run: npm install
-        working-directory: ./snake-api
-
-      - name: build api
-        run: npm run build
-        working-directory: ./snake-api
-
-      - name: install aws cdk
-        run: npm install -g aws-cdk
-
-      - name: install iac node modules
-        run: npm install
-        working-directory: ./snake-iac
+      - name: build
+        run: sh ./build.sh
 
       - name: compare incoming and target CloudFormation stacks
         run: cdk diff
@@ -116,20 +84,8 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      - name: install api node modules
-        run: npm install
-        working-directory: ./snake-api
-
-      - name: build api
-        run: npm run build
-        working-directory: ./snake-api
-
-      - name: install aws cdk
-        run: npm install -g aws-cdk
-
-      - name: install iac node modules
-        run: npm install
-        working-directory: ./snake-iac
+      - name: build
+        run: sh ./build.sh
 
       - name: compare incoming and target CloudFormation stacks
         run: cdk diff
