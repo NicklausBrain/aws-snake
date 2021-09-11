@@ -32,9 +32,8 @@ jobs:
       - name: build
         run: sh ./build.sh
 
-  deploy-test:
+  compare-test:
     needs: [build] # when build succeeded
-    environment: test
     env:
       NODE_ENV: test
     runs-on: ubuntu-latest
@@ -59,14 +58,35 @@ jobs:
         run: cdk diff
         working-directory: ./snake-iac
 
+  deploy-test:
+    needs: [compare-test] # when differences are shown
+    environment: test
+    env:
+      NODE_ENV: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.aws-region }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: build
+        run: sh ./build.sh
+
       - name: deploy updated CloudFormation stack
         run: cdk deploy --ci --require-approval never
         working-directory: ./snake-iac
 
-  deploy-prod:
-    if: ${{ github.ref == 'refs/heads/main' }} # main branch only
-    needs: [deploy-test] # after test deploy succeeded
-    environment: prod
+  compare-prod:
+    needs: [deploy-test] # after test deployment
     env:
       NODE_ENV: prod
     runs-on: ubuntu-latest
@@ -90,6 +110,30 @@ jobs:
       - name: compare incoming and target CloudFormation stacks
         run: cdk diff
         working-directory: ./snake-iac
+
+  deploy-prod:
+    if: ${{ github.ref == 'refs/heads/main' }} # main branch only
+    needs: [compare-prod] # when differences are shown
+    environment: prod
+    env:
+      NODE_ENV: prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.aws-region }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: build
+        run: sh ./build.sh
 
       - name: deploy updated CloudFormation stack
         run: cdk deploy --ci --require-approval never
