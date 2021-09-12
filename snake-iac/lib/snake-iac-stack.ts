@@ -36,7 +36,7 @@ export class SnakeStack extends cdk.Stack {
       functionName: nameIt("api-lambda"),
       runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.Code.fromAsset("./../snake-api/dist"),
-      handler: "main.handler",
+      handler: "lambda.handler",
       memorySize: 512,
       timeout: cdk.Duration.seconds(3),
     });
@@ -48,11 +48,28 @@ export class SnakeStack extends cdk.Stack {
         url: snakeClientBucket.bucketWebsiteUrl,
       });
 
-    const httpApi = new gate.HttpApi(this, nameIt("Api-GateWay"),
+    const snakeApiIntegration = new integration.LambdaProxyIntegration(
+      {
+        handler: apiLambda,
+      });
+
+    const apiGateway = new gate.HttpApi(this, nameIt("Api-GateWay"),
       {
         apiName: nameIt("Api-GateWay"),
         defaultIntegration: snakeClientIntegration, // default route leads to website
       });
+
+    apiGateway.addRoutes({
+      path: "/api/{proxy+}",
+      methods: [gate.HttpMethod.ANY],
+      integration: snakeApiIntegration
+    });
+
+    apiGateway.addRoutes({
+      path: "/swagger/{proxy+}",
+      methods: [gate.HttpMethod.GET],
+      integration: snakeApiIntegration
+    });
 
     // Tags
     for (const nodeChild of scope.node.children) {
