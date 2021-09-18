@@ -5,7 +5,7 @@ const scores: any[] = [];
 
 /**
  * @openapi
- * /scores:
+ * /api/scores:
  *   get:
  *     description: Get all scores
  *     responses:
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 
 /**
  * @openapi
- * /scores/{score}:
+ * /api/scores/{score}:
  *   post:
  *     description: Create a new score record
  *     parameters:

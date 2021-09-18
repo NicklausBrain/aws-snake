@@ -3,12 +3,12 @@ import swagger from './routes/swagger'
 import scores from './routes/scores'
 
 const app = express();
-const port = 8080; // default port to listen
 
 app.use('/swagger',  swagger);
-app.use('/scores',  scores);
+app.use('/api/scores',  scores);
 
 // start the Express server
+const port = 8080; // default port to listen
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);
 });
