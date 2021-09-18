@@ -8,7 +8,7 @@
     "build": "tsc",
     "postbuild": "cp package.json dist/package.json && cd dist && npm install --only=production",
     "prestart": "npm run build",
-    "start": "node .",
+    "start": "(cd dist && node .)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
