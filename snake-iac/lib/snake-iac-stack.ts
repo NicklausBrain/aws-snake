@@ -22,10 +22,11 @@ export class SnakeStack extends cdk.Stack {
       bucketName: nameIt("website-s3"),
       versioned: false,
       publicReadAccess: true,
-      websiteIndexDocument: "index.html",
+      websiteIndexDocument: "index.html", // startup page
       removalPolicy: cdk.RemovalPolicy.DESTROY // remove on stack destruction
     });
 
+    // deploy web client from local folder into s3
     new s3deploy.BucketDeployment(this, nameIt("website-s3-deployment"), {
       sources: [s3deploy.Source.asset('../snake-client')],
       destinationBucket: snakeClientBucket,
@@ -35,7 +36,7 @@ export class SnakeStack extends cdk.Stack {
     const apiLambda = new lambda.Function(this, nameIt("api-lambda"), {
       functionName: nameIt("api-lambda"),
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset("./../snake-api/dist"),
+      code: lambda.Code.fromAsset("./../snake-api/dist"), // deploy api code from local folder
       handler: "lambda.handler",
       memorySize: 512,
       timeout: cdk.Duration.seconds(3),
@@ -45,12 +46,12 @@ export class SnakeStack extends cdk.Stack {
     const snakeClientIntegration = new integration.HttpProxyIntegration(
       {
         method: gate.HttpMethod.GET,
-        url: snakeClientBucket.bucketWebsiteUrl,
+        url: snakeClientBucket.bucketWebsiteUrl, // web client integration
       });
 
     const snakeApiIntegration = new integration.LambdaProxyIntegration(
       {
-        handler: apiLambda,
+        handler: apiLambda, // api integration
       });
 
     const apiGateway = new gate.HttpApi(this, nameIt("Api-GateWay"),
@@ -59,13 +60,13 @@ export class SnakeStack extends cdk.Stack {
         defaultIntegration: snakeClientIntegration, // default route leads to website
       });
 
-    apiGateway.addRoutes({
+    apiGateway.addRoutes({ // api route
       path: "/api/{proxy+}",
       methods: [gate.HttpMethod.ANY],
       integration: snakeApiIntegration
     });
 
-    apiGateway.addRoutes({
+    apiGateway.addRoutes({ // swagger route
       path: "/swagger/{proxy+}",
       methods: [gate.HttpMethod.GET],
       integration: snakeApiIntegration
