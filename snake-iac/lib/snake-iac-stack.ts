@@ -3,6 +3,7 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as rg from '@aws-cdk/aws-resourcegroups';
 import * as gate from '@aws-cdk/aws-apigatewayv2';
+import * as lambda from '@aws-cdk/aws-lambda';
 import * as integration from '@aws-cdk/aws-apigatewayv2-integrations'
 import { env } from 'process';
 
@@ -21,27 +22,55 @@ export class SnakeStack extends cdk.Stack {
       bucketName: nameIt("website-s3"),
       versioned: false,
       publicReadAccess: true,
-      websiteIndexDocument: "index.html",
+      websiteIndexDocument: "index.html", // startup page
       removalPolicy: cdk.RemovalPolicy.DESTROY // remove on stack destruction
     });
 
+    // deploy web client from local folder into s3
     new s3deploy.BucketDeployment(this, nameIt("website-s3-deployment"), {
       sources: [s3deploy.Source.asset('../snake-client')],
       destinationBucket: snakeClientBucket,
+    });
+
+    // Snake API
+    const apiLambda = new lambda.Function(this, nameIt("api-lambda"), {
+      functionName: nameIt("api-lambda"),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset("./../snake-api/dist"), // deploy api code from local folder
+      handler: "lambda.handler",
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(3),
     });
 
     // API Gateway
     const snakeClientIntegration = new integration.HttpProxyIntegration(
       {
         method: gate.HttpMethod.GET,
-        url: snakeClientBucket.bucketWebsiteUrl,
+        url: snakeClientBucket.bucketWebsiteUrl, // web client integration
       });
 
-    const httpApi = new gate.HttpApi(this, nameIt("Api-GateWay"),
+    const snakeApiIntegration = new integration.LambdaProxyIntegration(
+      {
+        handler: apiLambda, // api integration
+      });
+
+    const apiGateway = new gate.HttpApi(this, nameIt("Api-GateWay"),
       {
         apiName: nameIt("Api-GateWay"),
-        defaultIntegration: snakeClientIntegration,
+        defaultIntegration: snakeClientIntegration, // default route leads to website
       });
+
+    apiGateway.addRoutes({ // api route
+      path: "/api/{proxy+}",
+      methods: [gate.HttpMethod.ANY],
+      integration: snakeApiIntegration
+    });
+
+    apiGateway.addRoutes({ // swagger route
+      path: "/swagger/{proxy+}",
+      methods: [gate.HttpMethod.GET],
+      integration: snakeApiIntegration
+    });
 
     // Tags
     for (const nodeChild of scope.node.children) {
