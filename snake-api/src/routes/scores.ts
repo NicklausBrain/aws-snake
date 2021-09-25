@@ -1,5 +1,5 @@
 import express from "express";
-import {saveScore} from "../services/ddbClient";
+import {saveScore, getScores} from "../services/ddbClient";
 
 const router = express.Router();
 const scores: any[] = [];
@@ -13,8 +13,14 @@ const scores: any[] = [];
  *       200:
  *         description: scores array
  */
-router.get("/", (req, res) => {
-    res.send(scores);
+router.get("/", async (req, res) => {
+    try {
+        const result = await getScores();
+        res.send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
