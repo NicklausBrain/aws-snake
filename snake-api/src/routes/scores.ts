@@ -1,4 +1,5 @@
 import express from "express";
+import {saveScore} from "../services/ddbClient";
 
 const router = express.Router();
 const scores: any[] = [];
@@ -31,10 +32,17 @@ router.get("/", (req, res) => {
  *       200:
  *         description: added score item
  */
-router.post("/:score", (req, res) => {
+router.post("/:score", async (req, res) => {
     const { score } = req.params;
-    scores.push(score);
-    res.send(score);
+    const { remoteAddress: ipAddress } = req.socket;
+
+    try {
+        const result = await saveScore(ipAddress, parseInt(score, 10));
+        res.send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 export default router
