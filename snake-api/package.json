@@ -14,6 +14,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.32.0",
     "@types/aws-lambda": "^8.10.83",
     "@vendia/serverless-express": "^4.3.11",
     "express": "^4.17.1",

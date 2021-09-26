@@ -5,6 +5,7 @@ import * as rg from '@aws-cdk/aws-resourcegroups';
 import * as gate from '@aws-cdk/aws-apigatewayv2';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as integration from '@aws-cdk/aws-apigatewayv2-integrations'
+import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import { env } from 'process';
 
 const envName = env.NODE_ENV || 'temp';
@@ -40,6 +41,9 @@ export class SnakeStack extends cdk.Stack {
       handler: "lambda.handler",
       memorySize: 512,
       timeout: cdk.Duration.seconds(3),
+      environment: { // environment variables for lambda app
+        NODE_ENV: envName,
+      }
     });
 
     // API Gateway
@@ -72,12 +76,22 @@ export class SnakeStack extends cdk.Stack {
       integration: snakeApiIntegration
     });
 
-    // Tags
+    // Persistence layer
+    const table = new dynamodb.Table(this, nameIt('DynamoDb-Table'), {
+      tableName: nameIt('DynamoDb-Table'),
+      partitionKey: { name: 'ipAddress', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY // remove on stack destruction
+    });
+
+    table.grantReadWriteData(apiLambda); // give api access to data
+
+    // Tags (to improve resources distinction)
     for (const nodeChild of scope.node.children) {
       cdk.Tags.of(nodeChild).add(SnakeStack.Name, SnakeStack.Name);
     }
 
-    // Resource group
+    // Resource group (akin to azure)
     new rg.CfnGroup(this, nameIt("resource-group"), {
       name: nameIt("resource-group"),
       tags: [{ key: SnakeStack.Name, value: SnakeStack.Name }],
