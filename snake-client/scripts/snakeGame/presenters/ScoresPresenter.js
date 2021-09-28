@@ -9,7 +9,12 @@
 				viewActivator.activateMenuView();
 			};
 
-			scoresManager.getRecords().forEach(scoresView.renderRecord);
+			scoresManager
+				.getRecords()
+				.then(function (scores) {
+					scores.forEach(
+						scoresView.renderRecord)
+				});
 		}
 
 		return ScoresPresenter;
