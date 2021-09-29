@@ -1,5 +1,5 @@
 import { env } from 'process';
-import { DynamoDBClient, PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 
 // Set Dynamo DB table name
 const tableName = `${env.NODE_ENV}-snake-dynamodb-table`;
@@ -8,6 +8,18 @@ const tableName = `${env.NODE_ENV}-snake-dynamodb-table`;
 const ddbClient = new DynamoDBClient({});
 
 export async function saveScore(ipAddress: string, score: number) {
+
+    const exisitngRecord  = await ddbClient.send(new GetItemCommand({
+        TableName: tableName,
+        Key: { ipAddress: { S: ipAddress } }
+    }));
+
+    const exisitngScore = parseInt(exisitngRecord?.Item?.score?.N, 10);
+
+    if(exisitngScore > score) {
+        return;
+    }
+
     const params = {
         TableName: tableName,
         Item: {
