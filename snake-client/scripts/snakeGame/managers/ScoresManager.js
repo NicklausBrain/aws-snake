@@ -36,13 +36,19 @@
 				return remoteStorage
 					.getScoresAsync()
 					.then(function (records) {
-						return records.map(function (r) {
-							var date = new Date(parseInt(r.timestamp.N));
-							return {
-								score: r.score.N,
-								date: date.toLocaleDateString() + ' ' + date.toLocaleTimeString(),
-								ipAddress: r.ipAddress.S
-							};});
+						var recordsToDisplay = records
+							.sort(function(r1, r2) {
+								return r2.score - r1.score; })
+							.slice(0, 10)
+							.map(function(r) {
+								return {
+									score: r.score,
+									date: r.date.toLocaleDateString() + ' ' + r.date.toLocaleTimeString().slice(0, 5),
+									ipAddress: r.ipAddress
+								};
+							});
+						
+						return recordsToDisplay;
 					})
 					.catch(function () {
 						return localStorage.getItem(recordsKey);
