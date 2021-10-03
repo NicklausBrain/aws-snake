@@ -24,7 +24,7 @@
 			this.renderRecord = function (record) {
 				var recordHtml =
 					'<div id="scoresButton" class="scoreItem" style="top:' + nextRecordOffset + 'rem">' +
-						'<div>' + record.score + ': ' + record.date + '</div>' +
+						'<div>' + record.ipAddress + ', ' + record.score + ', ' + record.date + '</div>' +
 					'</div>';
 				
 				nextRecordOffset += 2;
