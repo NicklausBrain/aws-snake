@@ -4,10 +4,19 @@ In this article, I want to share my experience with an interesting technology th
  
     In addition to the textual report, you will also have a sample project that you can use as a bootstrap for your own.
 
-Our encounter with AWS CDK was quite accidental. We've been requested for a relatively simple project, rather MVP, that needed to be delivered in a season with a small team (4-6 people). We could not afford to have a dedicated DevOps role but maintaining configuration for several environments appeared to be a pressing need early on.
+Essentialy AWS CDK allows you to code your infrastracture in a general-purpose programming language of your choice. Or at least almost, the languagess supported are: csharp|fsharp|go|java|javascript|python|typescript
+
+Our encounter with AWS CDK was quite accidental. We've been requested for a relatively simple project, MVP rather. The project needed to be delivered in a season with a small team (4-6 people). We could not afford to have a dedicated DevOps role but maintaining configuration for several environments appeared to be a pressing need early on. And yes, it had to be built upon AWS, <i>while my previous experience was mostly about Azure, so using more-less familiar ARM templates or Azure CLI were not an options.</i>
+
+
+Handling the configuration shift.
+
+# Outro
+AWS CDK settled the precident. Release of the Terraform CDK is proof the the future of the IaC is in using the common programming languages instead of domain/wendor specific ones.
+This not just lowers the entrance gap for the Continuos delivery discipline BUT aloows the team to be trully cross-functional wich is essential for agile development.
 
 Catch sentences:
-- Devops, Continous delivery and Infrastructure as a code are big words today
+- DevOps, Continous delivery and Infrastructure as a code are big words today
 - Make your application self-sufeccient: just download the code, run it and see
 - Aws CDK pushes it to the next level.
 
