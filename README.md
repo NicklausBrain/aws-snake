@@ -38,6 +38,10 @@ cd aws-snake
 ```
 (cd ./snake-api && npm run build)
 ```
+- install cdk node modules
+```
+(cd ./snake-iac && npm install)
+```
 - deploy the CDK toolkit stack into an AWS environment
 ```
 (cd ./snake-iac && cdk bootstrap)
