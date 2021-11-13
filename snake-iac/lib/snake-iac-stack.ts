@@ -20,7 +20,6 @@ export class SnakeStack extends cdk.Stack {
 
     // Snake Web Client
     const snakeClientBucket = new s3.Bucket(this, nameIt("website-s3"), {
-      bucketName: nameIt("website-s3"),
       versioned: false,
       publicReadAccess: true,
       websiteIndexDocument: "index.html", // startup page
