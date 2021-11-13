@@ -3,9 +3,14 @@ AWS &amp; CDK evaluation project
 
 # Prerequisites
 - [Configure AWS account](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
+  - [Create AWS access key](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey)
 - [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 ```
 curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"sudo installer -pkg AWSCLIV2.pkg -target /
+```
+- Configure AWS CLI using the created access key
+```
+aws configure
 ```
 - [Install Node LTS](https://nodejs.org/en/download/)
 ```
