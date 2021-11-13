@@ -54,6 +54,14 @@ cd aws-snake
 ```
 (cd ./snake-iac && cdk deploy)
 ```
+# Accessing live application
+- Get application entry point
+```
+aws apigatewayv2 get-apis
+```
+- Access the game at `<ApiEndpoint>` returned by `get-apis` command
+- Access swagger at `<ApiEndpoint>/swagger/`
+
 # Configuring CI/CD
 - Fork this repository
 - Configure test and prod [virtual environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#creating-an-environment)
@@ -63,3 +71,24 @@ cd aws-snake
     - `AWS_SECRET_ACCESS_KEY`
 
 - Create a Github Action from [ci-cd.yml](.github/workflows/ci-cd.yml) file
+
+# 
+
+aws apigatewayv2 get-apis
+{
+    "Items": [
+        {
+            "ApiEndpoint": "https://kwokcgfh73.execute-api.eu-central-1.amazonaws.com",
+            "ApiId": "kwokcgfh73",
+            "ApiKeySelectionExpression": "$request.header.x-api-key",
+            "CreatedDate": "2021-11-13T12:18:32+00:00",
+            "DisableExecuteApiEndpoint": false,
+            "Name": "temp-snake-api-gateway",
+            "ProtocolType": "HTTP",
+            "RouteSelectionExpression": "$request.method $request.path",
+            "Tags": {
+                "temp-snake-snake-stack": "temp-snake-snake-stack"
+            }
+        }
+    ]
+}
