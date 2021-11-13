@@ -3,9 +3,14 @@ AWS &amp; CDK evaluation project
 
 # Prerequisites
 - [Configure AWS account](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
+  - [Create AWS access key](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey)
 - [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 ```
 curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"sudo installer -pkg AWSCLIV2.pkg -target /
+```
+- Configure AWS CLI using the created access key
+```
+aws configure
 ```
 - [Install Node LTS](https://nodejs.org/en/download/)
 ```
@@ -33,6 +38,10 @@ cd aws-snake
 ```
 (cd ./snake-api && npm run build)
 ```
+- install cdk node modules
+```
+(cd ./snake-iac && npm install)
+```
 - deploy the CDK toolkit stack into an AWS environment
 ```
 (cd ./snake-iac && cdk bootstrap)
@@ -45,6 +54,14 @@ cd aws-snake
 ```
 (cd ./snake-iac && cdk deploy)
 ```
+# Accessing live application
+- Get application entry point
+```
+aws apigatewayv2 get-apis
+```
+- Access the game at `<ApiEndpoint>` returned by `get-apis` command
+- Access swagger at `<ApiEndpoint>/swagger/`
+
 # Configuring CI/CD
 - Fork this repository
 - Configure test and prod [virtual environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#creating-an-environment)
